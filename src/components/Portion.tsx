@@ -12,7 +12,7 @@ function Portion({ main, sides, onGetPortion}: PortionProps) {
             <div className="flex flex-row place-content-between">
                 <h1 className="text-white font-bold text-4xl">Menu</h1>
                 <button onClick={onGetPortion} className="bg-green-500 w-1/2 text-white rounded-full py-2 px-4">
-                    Get Portion
+                    Waste Portion
                 </button>
             </div>
             <h2 className="text-gray-700 font-bold">Main:</h2>

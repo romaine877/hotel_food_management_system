@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 import WasteTrend from './components/WasteTrend';
+import WasteWeightComponent from './components/WasteWeight';
 
 
 
@@ -38,6 +39,11 @@ function App() {
 
   
   const [showFoodWaste, setShowFoodWaste] = useState(false);
+  const [wasteInfo, setWasteInfo] = useState({
+    currentMonthWaste: '',
+    currentWeekWaste: '',
+    wasteAmountKg: '',
+  });
   const [guests, setGuests] = useState({
     guestToday: 0,
     engagedGuests: 0,
@@ -58,6 +64,11 @@ function App() {
     const unsubscribe = docRef.onSnapshot((doc) => {
      doc.docs.map((doc) =>{
       const data = doc.data();
+      setWasteInfo({
+        currentMonthWaste: data.currentMonthWaste,
+        currentWeekWaste: data.currentWeekWaste,
+        wasteAmountKg: data.wasteAmountKg,
+      });
       const forecasts = data.forecast;
       const mapList = forecasts.map((element: Forecast) => {
         console.log(element);
@@ -90,9 +101,11 @@ function App() {
 
   return (
     <div className="grid grid-cols-3 gap-2">
-      <DataElement title={'Guests Today'} body={guests.guestToday} color='bg-blue-400' />
-      <DataElement title={'Engaged Guests'} body={guests.engagedGuests} color='bg-teal-400' />
-      <DataElement title={'Free Guests'} body={guests.freeGuest} color='bg-green-400' />
+  
+    <DataElement onTap={()=> setShowFoodWaste(false)} title={'Guests Today'} body={guests.guestToday} color='bg-blue-400' />
+      <DataElement onTap={()=> setShowFoodWaste(false)} title={'Engaged Guests'} body={guests.engagedGuests} color='bg-teal-400' />
+      <DataElement onTap={()=> setShowFoodWaste(false)} title={'Free Guests'} body={guests.freeGuest} color='bg-green-400' />
+ 
       {!showFoodWaste && 
       <>
       
@@ -124,9 +137,13 @@ function App() {
       </>
       }
       {showFoodWaste &&
+      <>
+      
       <div className='col-span-2'>
-     <WasteTrend currentWeekWaste={'$100'} currentMonthWaste={'$200'}/>
+     <WasteTrend currentWeekWaste={wasteInfo.currentWeekWaste} currentMonthWaste={wasteInfo.currentMonthWaste} />
         </div>
+        <WasteWeightComponent amount={wasteInfo.wasteAmountKg}/>
+      </>
       }
      
 
