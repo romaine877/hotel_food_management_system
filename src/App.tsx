@@ -8,6 +8,7 @@ import HotelCalendar from './components/HotelCalendar';
 import { useEffect, useState } from 'react';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
+import WasteTrend from './components/WasteTrend';
 
 
 
@@ -25,7 +26,7 @@ const firestore = firebaseApp.firestore();
 
 export type Forecast = {
   title: string;
-  recommendations: string;
+  recommendation: string;
   amount: string;
   engagedGuest: number;
   freeGuest: number;
@@ -46,6 +47,7 @@ function App() {
     title: '',
     recommendations: '',
     amount: '',
+    amountNumber: 0,
     engagedGuest: 0,
     freeGuest: 0,
   }])
@@ -57,23 +59,21 @@ function App() {
      doc.docs.map((doc) =>{
       const data = doc.data();
       const forecasts = data.forecast;
-      forecasts.forEach((element: Forecast) => {
-     
-
-        setForecast((prevForecast) => [
-          ...prevForecast,
-          {
-            title: element.title,
-            recommendations: data.recommendations,
-            amount: data.amount,
-            engagedGuest: data.engagedGuest,
-            freeGuest: data.freeGuest,
-          },
-        ]);
+      const mapList = forecasts.map((element: Forecast) => {
+        console.log(element);
+        return {
+          title: element.title,
+          recommendations: element.recommendation,
+          amount: element.amount,
+          amountNumber : parseInt(element.amount.replace(",", "")),
+          engagedGuest: element.engagedGuest,
+          freeGuest: element.freeGuest,
+        };
         
       
       });
-      //console.log(doc.data());
+      setForecast(mapList);
+  
       
       setGuests({
         guestToday: doc.data().guestToday,
@@ -100,23 +100,33 @@ function App() {
         return element.title;
       })} sides={['Bammy', 'Fries']} />
       <div className="col-span-2">
-        <GuestCount />
+        <GuestCount forecasts={forecast.map((forcastItem)=>{
+          return {
+            title: forcastItem.title,
+            recommendation: forcastItem.recommendations,
+            amount: forcastItem.amount,
+            amountNumber: forcastItem.amountNumber,
+            engagedGuest: forcastItem.engagedGuest,
+            freeGuest: forcastItem.freeGuest,
+          };
+        })} />
       </div>
       <div className="col-span-2">
-        <Forecast titles={['Breakfast', 'Lunch' ,'Dinner']} recommendations={['Open Additional Buffet', 'None', 'None']} amounts={['1900', '1800', '1950']} />
+      <Forecast titles={forecast.map((element)=>{
+        return element.title;
+      })} recommendations={forecast.map((element)=>{
+        return element.recommendations;
+      })} amounts={forecast.map((element)=>{
+        return element.amount;
+      })} />
       </div>
       <HotelCalendar/>
       </>
       }
       {showFoodWaste &&
-      <>
-      <div className="col-span-3">
-        <h1 className="text-4xl font-bold text-center">Food Waste</h1>
+      <div className='col-span-2'>
+     <WasteTrend currentWeekWaste={'$100'} currentMonthWaste={'$200'}/>
         </div>
-        <div className="col-span-3">
-        <Forecast titles={['Breakfast', 'Lunch' ,'Dinner']} recommendations={['Open Additional Buffet', 'None', 'None']} amounts={['1900', '1800', '1950']} />
-        </div>
-        </>
       }
      
 

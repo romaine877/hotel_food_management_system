@@ -28,25 +28,33 @@ import {
     },
   };
   
-  const labels = ['Breakfast', 'Lunch', 'Dinner', ];
   
-  export const data = {
-    labels,
-    datasets: [
-      {
-        label: 'Engaged Guest',
-        data: labels.map(() => Math.floor(Math.random() * 1000)),
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
-      },
-      {
-        label: 'Free Guest',
-        data: labels.map(() => Math.floor(Math.random() * 1000)),
-        backgroundColor: 'rgba(53, 122, 235, 0.5)',
-      },
-    ],
+  type GuestChartProps = {
+    
+    titles: string[];
+    freeGuests: number[];
+    engagedGuests: number[];
   };
   
-  export function GuestChart() {
+  
+  
+  export function GuestChart({ titles, freeGuests, engagedGuests  }: GuestChartProps) {
+    const labels = titles;
+    const data = {
+      labels,
+      datasets: [
+        {
+          label: 'Engaged Guest',
+          data: engagedGuests,
+          backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        },
+        {
+          label: 'Free Guest',
+          data: freeGuests,
+          backgroundColor: 'rgba(53, 122, 235, 0.5)',
+        },
+      ],
+    };
     return <Bar options={options} data={data} />;
   }
   

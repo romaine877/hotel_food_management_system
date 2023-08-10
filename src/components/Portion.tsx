@@ -8,7 +8,7 @@ type PortionProps = {
 
 function Portion({ main, sides, onGetPortion}: PortionProps) {
     return (
-        <div className="bg-blue-400 p-8 m-4 text-left">
+        <div className="bg-blue-400 p-8 m-4 text-left h-[300px]">
             <div className="flex flex-row place-content-between">
                 <h1 className="text-white font-bold text-4xl">Menu</h1>
                 <button onClick={onGetPortion} className="bg-green-500 w-1/2 text-white rounded-full py-2 px-4">
